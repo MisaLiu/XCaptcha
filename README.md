@@ -31,7 +31,7 @@ git clone https://github.com/CairBin/XCaptcha.git
 
 从上述所支持验证码的官网注册账户，然后获取你站点的`Captcha ID`和`Secret Key`，有的也叫`Site Key`和`Secret Key`，本质上都一样，对应公钥和私钥。前者用于前端标识可以公开，后者用于服务端向验证码服务器校验需要保密。
 
-修改你主题模板的`comments.php`文件，主题目录是`usr/themes/your_them/`，在评论提交按钮之前或者表单最后添加一行代码:
+修改你主题模板的`comments.php`文件，主题目录是`usr/themes/your_theme/`，在评论提交按钮之前或者表单最后添加一行代码:
 
 ```php
 <?php if (array_key_exists('XCaptcha', Typecho_Plugin::export()['activated'])) : XCaptcha_Plugin::showCaptcha(); endif; ?>
