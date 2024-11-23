@@ -189,6 +189,8 @@ EOF;
         $form->addInput(new Radio('widgetSize', ["normal" => "常规", "flexible"=>"灵活", "compact" => "紧凑"], "normal", _t('样式'), _t('设置验证框布局样式，默认为常规<br/>- hCaptcha不支持灵活<br/>- reCaptcha v2不支持灵活<br/>- 极验证v3不支持样式调整')));
         $form->addInput(new Radio('captchaChoosen', ["hcaptcha" => "hCaptcha", "cloudflare" => "Cloudflare", "recaptcha" => "Google reCaptcha v2", "geetest" => "极验证 v3"], "hcaptcha", _t('验证工具'), _t('选择验证工具')));
         $form->addInput(new Text('cdnUrl', NULL, '', _t('引入JS的CDN加速地址：'), _t('注意使用 https 协议<br />留空引入默认JS')));
+        $form->addInput(new Radio('enableJquery', ["enable"=>"启用", "disable"=>"不启用"], "enable", _t('启用JQuery'), _t('根据你的主题判断是否使用JQuery, 默认启用<br/>如果主题自带就不用了, 如果没有需要启用<br/>此选项针对极验证<br/>如果你不懂此选项先保持默认, 根据极验证是否能加载判断')));
+        $form->addInput(new Text('jqueryUrl', NULL, 'https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js', _t('JQuery CDN URL'), _t('jQuery的地址, 可根据网络情况更换CDN, 只有勾选了启用此项才有效')));
     }
 
     public static function personalConfig(Form $form) {}
@@ -212,8 +214,11 @@ EOF;
 
 		if($filter->captchaChoosen == 'geetest'){
 			$ajaxUri = '/index.php/action/xcaptcha?do=ajaxResponseCaptchaData';
+            if($filter->enableJquery == 'enable'){
+                echo '<script src="' . $filter->jqueryUrl .'"></script>';
+            }
+
 			echo <<<EOF
-			<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/2.2.4/jquery.min.js"></script>
 			<script>
                 var jqGtCaptcha = $("#gt-captcha");
 				$.ajax({
