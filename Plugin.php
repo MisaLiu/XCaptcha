@@ -5,7 +5,7 @@
  *
  * @package XCaptcha
  * @author CairBin
- * @version 1.0.1
+ * @version 1.0.2
  * @link https://cairbin.top
  */
 
@@ -19,6 +19,7 @@ use Typecho\Widget\Helper\Form\Element\Checkbox;
 use Widget\Options;
 use Typecho\Widget\Exception;
 use Typecho\Widget;
+use Typecho\Widget\Helper\Form\Element\Select;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
@@ -152,29 +153,34 @@ class XCaptcha_Plugin implements Typecho_Plugin_Interface
 
         if($filter->captchaChoosen != "geetest") return;
 
+        $sizeSelector = ["normal" => "200px", "flexible"=>"100%", "compact" => "150px"];
+        $geetestSize = $sizeSelector[$filter->widgetSize];
+        $dismod = $filter->dismod;
+
         $ajaxUri = '/index.php/action/xcaptcha?do=ajaxResponseCaptchaData';
         echo <<<EOF
         <script>
             var jqGtCaptcha = $("#gt-captcha");
 		    $.ajax({
-		    url:"{$ajaxUri}&t=" + (new Date()).getTime(),
-		    type: "get",
-            dataType: "json",
-            success: function (data) {
-		    initGeetest({
-		    gt:data.gt,
-		    challenge:data.challenge,
-            new_captcha: data.new_captcha,
-            product: "float",
-	        offline:!data.success,
-            width: '100%'
-		    }, function(captchaObj){
-	        captchaObj.appendTo(jqGtCaptcha);
-		    })
-    	    }
+		        url:"{$ajaxUri}&t=" + (new Date()).getTime(),
+		        type: "get",
+                dataType: "json",
+                success: function (data) {
+		            initGeetest({
+		                gt:data.gt,
+		                challenge:data.challenge,
+                        new_captcha: data.new_captcha,
+                        product: '$dismod',
+	                    offline:!data.success,
+                        width: '$geetestSize'
+		        }, function(captchaObj){
+	                    captchaObj.appendTo(jqGtCaptcha);
+		            })
+    	        }
 	        })
 		</script>
 EOF;
+
     }
 
     /**
@@ -186,11 +192,14 @@ EOF;
         $form->addInput(new Text('captchaId', NULL, '', _t('Captcha ID'), _t('公钥(ID)')));
         $form->addInput(new Text('secretKey', NULL, '', _t('Secret Key'), _t('私钥(Key)')));
         $form->addInput(new Radio('widgetColor', ["auto"=>"自动", "light" => "浅色", "dark" => "深色"], "auto", _t('颜色'), _t('设置验证工具主题颜色，默认为浅色<br/>- hCaptcha不支持自动<br/>- reCaptcha v2不支持自动<br/>- 极验证v3不支持颜色')));
-        $form->addInput(new Radio('widgetSize', ["normal" => "常规", "flexible"=>"灵活", "compact" => "紧凑"], "normal", _t('样式'), _t('设置验证框布局样式，默认为常规<br/>- hCaptcha不支持灵活<br/>- reCaptcha v2不支持灵活<br/>- 极验证v3不支持样式调整')));
+        $form->addInput(new Radio('widgetSize', ["normal" => "常规", "flexible"=>"灵活", "compact" => "紧凑"], "normal", _t('样式'), _t('设置验证框布局样式，默认为常规<br/>- hCaptcha不支持灵活<br/>- reCaptcha v2不支持灵活')));
         $form->addInput(new Radio('captchaChoosen', ["hcaptcha" => "hCaptcha", "cloudflare" => "Cloudflare", "recaptcha" => "Google reCaptcha v2", "geetest" => "极验证 v3"], "hcaptcha", _t('验证工具'), _t('选择验证工具')));
-        $form->addInput(new Text('cdnUrl', NULL, '', _t('引入JS的CDN加速地址：'), _t('注意使用 https 协议<br />留空引入默认JS')));
+        $form->addInput(new Text('cdnUrl', NULL, '', _t('验证码JS地址:'), _t('用于CDN加速加载验证码, 留空引入默认JS</br>注意使用 https 协议')));
+        $form->addInput(new Text('verifyUrl', NULL, '', _t('校验地址:'), _t('用于设置验证码校验接口, 留空使用默认, 此项不支持极验证')));
         $form->addInput(new Radio('enableJquery', ["enable"=>"启用", "disable"=>"不启用"], "enable", _t('启用JQuery'), _t('根据你的主题判断是否使用JQuery, 默认启用<br/>如果主题自带就不用了, 如果没有需要启用<br/>此选项针对极验证<br/>如果你不懂此选项先保持默认, 根据极验证是否能加载判断')));
         $form->addInput(new Text('jqueryUrl', NULL, 'https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js', _t('JQuery CDN URL'), _t('jQuery的地址, 可根据网络情况更换CDN, 只有勾选了启用此项才有效')));
+        $form->addInput(new Select('dismod', array('float' => '浮动式（float）', 'embed' => '嵌入式（embed）', 'popup' => '弹出框（popup）'), 'float', _t('极验证展现形式：')));
+            
     }
 
     public static function personalConfig(Form $form) {}
@@ -218,6 +227,9 @@ EOF;
                 echo '<script src="' . $filter->jqueryUrl .'"></script>';
             }
 
+            $sizeSelector = ["normal" => "200px", "flexible"=>"100%", "compact" => "150px"];
+            $geetestSize = $sizeSelector[$filter->widgetSize];
+            $dismod = $filter->dismod;
 			echo <<<EOF
 			<script>
                 var jqGtCaptcha = $("#gt-captcha");
@@ -230,9 +242,9 @@ EOF;
 							gt:data.gt,
 							challenge:data.challenge,
                             new_captcha: data.new_captcha,
-                            product: "float",
+                            product: '$dismod',
 							offline:!data.success,
-                            width: '200px'
+                            width: '$geetestSize'
 						}, function(captchaObj){
 							captchaObj.appendTo(jqGtCaptcha);
 						})
@@ -322,8 +334,11 @@ EOF;
             "recaptcha" => ["g-recaptcha-response", "https://recaptcha.net/recaptcha/api/siteverify"]
         ];
         $captchaType = $filter->captchaChoosen;
+        $verifyUrl = $filter->verifyUrl;
+
         $postToken = $_POST[$captchaMap[$captchaType][0]] ?? '';
-        $urlPath = $captchaMap[$captchaType][1] ?? '';
+        $urlPath = $verifyUrl == '' ? $captchaMap[$captchaType][1] : $verifyUrl;
+
         return [$postToken, $urlPath];
     }
 
