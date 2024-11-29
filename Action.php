@@ -16,9 +16,9 @@ class XCaptcha_Action extends Typecho_Widget implements Widget_Interface_Do
 
     public function ajaxResponseCaptchaData()
     {
-        if (!$this->request->isAjax()) {
-            $this->response->redirect('/');
-        }
+        // if (!$this->request->isAjax()) {
+        //     $this->response->redirect('/');
+        // }
 
         Typecho_Plugin::factory('XCaptcha')->responseGeetest();
     }
