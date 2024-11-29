@@ -45,6 +45,8 @@ git clone https://github.com/CairBin/XCaptcha.git
 
 注意区分JQuery CDN URL与上述部分，JQuery CDN URL用于通过CDN引入JQuery（不能留空），默认使用jsdelivr，而上述部分是用于**初始化/校验**验证码。
 
+注意：XCaptcha v1.1.0版本极验证加载不再依赖JQuery，启用JQuery与JQuery CDN URL项已经被移除。另外此版本兼容Typecho 1.1版本。
+
 另外，如果勾选了开启登陆页面验证码则，注册页面也会跟着开启，前提是你启动了注册功能。
 
 ## 插件导致无法登陆后台
