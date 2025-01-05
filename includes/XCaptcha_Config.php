@@ -24,6 +24,7 @@ class XCaptcha_Config{
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Checkbox('pages', ["comments" => "评论", "login" => "登陆页"], [], _t('应用到'), _t('在哪些页面应用验证码')));
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Select('isAuthorUncheck', array(false => '关闭', true => '开启'), false, _t('管理员评论无需验证')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('captchaId', NULL, '', _t('Captcha ID'), _t('公钥(ID)')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, '', _t('Secret Key'), _t('私钥(Key)')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('widgetColor', ["auto"=>"自动", "light" => "浅色", "dark" => "深色"], "auto", _t('颜色'), _t('设置验证工具主题颜色，默认为浅色<br/>- hCaptcha不支持自动<br/>- reCaptcha v2不支持自动<br/>- 极验证v3不支持颜色')));
@@ -48,6 +49,11 @@ class XCaptcha_Config{
     public function getPages()
     {
         return $this->options->pages;
+    }
+
+    public function isAuthorUncheck()
+    {
+        return $this->options->isAuthorUncheck;
     }
 
     /**

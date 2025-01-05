@@ -135,6 +135,11 @@ EOF;
             Typecho_Widget::widget('Widget_Notice')->set(_t('XCaptcha: No keys'), 'error');
 			return;
         }
+        // 是否开启登录用户不校验 且 用户处于登录状态 且 为administrator，都符合则不渲染
+        $user = Typecho_Widget::widget('Widget_User');
+        if($config->isAuthorUncheck() && $user->hasLogin() && $user->pass('administrator', true))
+            return;
+
         list($captchaScript, $cdnUrl) = XCaptcha_Utils::getCaptchaScript(
             $config->getCaptchaChoosen(),
             $config->getCdnUrl(),

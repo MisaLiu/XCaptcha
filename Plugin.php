@@ -5,7 +5,7 @@
  *
  * @package XCaptcha
  * @author CairBin
- * @version 1.1.0
+ * @version 1.1.1
  * @link https://cairbin.top
  */
 
@@ -104,6 +104,10 @@ class XCaptcha_Plugin implements Typecho_Plugin_Interface
 			Typecho_Widget::widget('Widget_Notice')->set(_t('XCaptcha: No keys.'), 'error');
             return $comment;
         }
+        // 是否开启登录用户不校验 且 用户处于登录状态 且 为administrator，都符合则不校验
+        $user = Typecho_Widget::widget('Widget_User');
+        if($config->isAuthorUncheck() && $user->hasLogin() && $user->pass('administrator', true))
+            return $comment;
 
         // 如果是Geetest v3
         if($config->getCaptchaChoosen() == 'geetest'){
