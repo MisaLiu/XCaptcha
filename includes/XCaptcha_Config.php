@@ -27,9 +27,9 @@ class XCaptcha_Config{
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Select('isAuthorUncheck', array(false => '关闭', true => '开启'), false, _t('管理员评论无需验证')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('captchaId', NULL, '', _t('Captcha ID'), _t('公钥(ID)')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('secretKey', NULL, '', _t('Secret Key'), _t('私钥(Key)')));
-        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('widgetColor', ["auto"=>"自动", "light" => "浅色", "dark" => "深色"], "auto", _t('颜色'), _t('设置验证工具主题颜色，默认为浅色<br/>- hCaptcha不支持自动<br/>- reCaptcha v2不支持自动<br/>- 极验证v3不支持颜色')));
-        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('widgetSize', ["normal" => "常规", "flexible"=>"灵活", "compact" => "紧凑"], "normal", _t('样式'), _t('设置验证框布局样式，默认为常规<br/>- hCaptcha不支持灵活<br/>- reCaptcha v2不支持灵活')));
-        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('captchaChoosen', ["hcaptcha" => "hCaptcha", "cloudflare" => "Cloudflare", "recaptcha" => "Google reCaptcha v2", "geetest" => "极验证 v3"], "hcaptcha", _t('验证工具'), _t('选择验证工具')));
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('widgetColor', ["auto"=>"自动", "light" => "浅色", "dark" => "深色"], "auto", _t('颜色'), _t('设置验证工具主题颜色，默认为浅色<br/>- hCaptcha不支持自动<br/>- reCaptcha v2不支持自动<br/>- 极验证v3不支持颜色<br/>- altcha不支持配置')));
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('widgetSize', ["normal" => "常规", "flexible"=>"灵活", "compact" => "紧凑"], "normal", _t('样式'), _t('设置验证框布局样式，默认为常规<br/>- hCaptcha不支持灵活<br/>- reCaptcha v2不支持灵活<br/>- altcha不支持配置')));
+        $form->addInput(new Typecho_Widget_Helper_Form_Element_Radio('captchaChoosen', [ "altcha" => "Altcha", "hcaptcha" => "hCaptcha", "cloudflare" => "Cloudflare", "recaptcha" => "Google reCaptcha v2", "geetest" => "极验证 v3"], "hcaptcha", _t('验证工具'), _t('选择验证工具<br/>- altcha为纯本地方案，但是需要页面支持HTTPS才能使用')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('cdnUrl', NULL, '', _t('验证码JS地址:'), _t('用于CDN加速加载验证码, 留空引入默认JS</br>注意使用 https 协议')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Text('verifyUrl', NULL, '', _t('校验地址:'), _t('用于设置验证码校验接口, 留空使用默认, 此项不支持极验证')));
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Select('dismod', array('float' => '浮动式（float）', 'embed' => '嵌入式（embed）', 'popup' => '弹出框（popup）'), 'float', _t('极验证展现形式：')));

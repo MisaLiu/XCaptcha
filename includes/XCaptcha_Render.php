@@ -12,7 +12,7 @@ class XCaptcha_Render
      * @param string  $parg          哪个页面
      * @return {*}
      */    
-    private static function echoContent($cdnUrl, $captchaScript, $page)
+    private static function echoContent($cdnUrl, $captchaScript, $page, $captchaChoosen)
     {
         if($page == 'login'){
             echo <<<EOF
@@ -25,12 +25,16 @@ class XCaptcha_Render
 EOF;
         }else if($page == 'comments'){
             echo $captchaScript;
-        }
-
-        echo<<<EOF
+        }   
+        if($captchaChoosen == 'altcha'){
+            echo<<<EOF
+            <script src="$cdnUrl" type="module"></script>
+EOF;
+        }else{
+                echo<<<EOF
         <script src="$cdnUrl"></script>
 EOF;
-
+        }
     }
 
     /**
@@ -44,7 +48,7 @@ EOF;
         $geetestSize = $sizeSelector[$widgetSize];
         $dismod = $geetest->dismod;
 
-        $ajaxUri = '/index.php/action/xcaptcha?do=ajaxResponseCaptchaData';
+        $ajaxUri = '/index.php/action/xcaptcha?do=ajaxResponseCaptchaData&type=geetest';
         echo <<<EOF
         <script>
             const initializeGeetestCaptcha = ()=>{
@@ -80,6 +84,24 @@ EOF;
 
     }
 
+    private static function echoAltchaContent(){
+        echo<<<EOF
+        <script>
+            if (window.isSecureContext && window.crypto) {
+                console.log("Web Crypto API is available and secure context is present.");
+            } else {
+                console.log("Web Crypto API is not available or secure context is not present.");
+            }
+            document.querySelector('#altcha').addEventListener('statechange', (ev) => {
+                //console.log('state:', ev.detail.state);
+                if (ev.detail.state === 'verified') {
+                    //console.log('payload:', ev.detail.payload);
+                }
+            });
+            </script>
+EOF;
+    }
+
     /**
      * 渲染登录/注册页的验证码
      * @static
@@ -112,10 +134,13 @@ EOF;
         );
         if (!$captchaScript) return;    // 模板不存在则不渲染
 
-        self::echoContent($cdnUrl, $captchaScript, 'login');    // 输出通用部分
+        self::echoContent($cdnUrl, $captchaScript, 'login', $config->getCaptchaChoosen());    // 输出通用部分
         if($config->getCaptchaChoosen() == 'geetest'){
             // geetest需要额外配置
             self::echoGeetestContent($config->getWidgetSize(), $config->getGeetestConfig());
+        }
+        if($config->getCaptchaChoosen() == 'altcha'){
+            self::echoAltchaContent();
         }
     }
 
@@ -149,10 +174,13 @@ EOF;
         );
         if (!$captchaScript) return;
 
-        self::echoContent($cdnUrl, $captchaScript, 'comments');    // 输出通用部分
+        self::echoContent($cdnUrl, $captchaScript, 'comments', $config->getCaptchaChoosen());    // 输出通用部分
         if($config->getCaptchaChoosen() == 'geetest'){
             // geetest需要额外配置
             self::echoGeetestContent($config->getWidgetSize(), $config->getGeetestConfig());
+        }
+        if($config->getCaptchaChoosen() == 'altcha'){
+            self::echoAltchaContent();
         }
     }
     
