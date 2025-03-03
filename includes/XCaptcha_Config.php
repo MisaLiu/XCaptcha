@@ -92,8 +92,7 @@ class XCaptcha_Config{
     {
         $captchaId = $this->getCaptchaId();
         $secretKey = $this->getSecretKey();
-
-        return $captchaId!= "" && $secretKey!= "";
+        return $this->getCaptchaChoosen()!="altcha" && $captchaId!= "" && $secretKey!= "";
     }
 
     /**
