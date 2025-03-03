@@ -85,14 +85,19 @@ class XCaptcha_Config{
     }
 
     /**
-     * 校验私钥、公钥是否正确（不为空）
+     * 校验私钥、公钥是否正确（不为空，除非 getCaptchaChoosen() 返回 "altcha"）
      * @return boolean 返回结果
-     */    
+     */
     public function checkKeys()
     {
+        if ($this->getCaptchaChoosen() === "altcha") {
+            return true; // 如果 getCaptchaChoosen 是 "altcha"，直接返回 true
+        }
+
         $captchaId = $this->getCaptchaId();
         $secretKey = $this->getSecretKey();
-        return $this->getCaptchaChoosen()!="altcha" && $captchaId!= "" && $secretKey!= "";
+
+        return !empty($captchaId) && !empty($secretKey);
     }
 
     /**
