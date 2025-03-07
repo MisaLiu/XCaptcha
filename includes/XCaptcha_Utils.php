@@ -16,7 +16,8 @@ class XCaptcha_Utils
         "hcaptcha" => "https://hcaptcha.com/1/api.js",
         "cloudflare" => "https://challenges.cloudflare.com/turnstile/v0/api.js",
         "recaptcha" => "https://recaptcha.net/recaptcha/api.js",
-        "geetest" => "https://static.geetest.com/static/js/gt.0.4.9.js"
+        "geetest" => "https://static.geetest.com/static/js/gt.0.4.9.js",
+        "altcha" => "/usr/plugins/XCaptcha/static/altcha.min.js"
     ];
 
     /**
@@ -68,8 +69,8 @@ class XCaptcha_Utils
             "hcaptcha" => "<div class='h-captcha' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
             "cloudflare" => "<div class='cf-turnstile' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
             "recaptcha" => "<div class='g-recaptcha' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
-            "geetest" => "<div id='gt-captcha'></div>"
-        ];
+            "geetest" => "<div id='gt-captcha'></div>",
+            "altcha" => '<altcha-widget id="altcha" challengeurl="/index.php/action/xcaptcha?do=ajaxResponseCaptchaData&type=altcha" hidefooter hidelogo strings=\'{"error": "验证失败，请稍后重试","expired": "验证码已过期","label": "请勾选进行验证","verified": "验证成功","verifying": "正在验证...","waitAlert": "请稍候，正在验证"}\'></altcha-widget>'];
 
         return [$scriptTemplates[$captchaType] ?? '', $cdnUrl];
     }

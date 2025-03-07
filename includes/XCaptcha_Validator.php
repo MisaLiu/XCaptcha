@@ -41,6 +41,40 @@ class XCaptcha_Validator
     }
 
     /**
+     * 验证Altcha
+     * @static
+     * @param  XCaptcha_Config $config  配置
+     * @return boolean                  验证是否通过
+     */    
+    public static function verifyAltchaSolution(XCaptcha_Config $config){
+
+        require_once dirname(__DIR__) . "/lib/class.altcha.php";
+        // 从 Session 中获取挑战信息和 hmacKey
+        @session_start();
+        $challenge = $_SESSION['altcha_challenge'] ?? null;
+        $signature = $_SESSION['altcha_signature'] ?? null;
+        $salt = $_SESSION['altcha_salt'] ?? null;
+        $hmacKey = $_SESSION['altcha_hmac_key'] ?? null;
+        if (!$challenge || !$signature || !$salt || !$hmacKey) {
+            return false; // 挑战信息或 hmacKey 不存在
+        }
+        $userSolution = $_POST['altcha'] ?? null;
+        // 构造验证数据
+        $payload = $userSolution;
+        // 验证解决方案
+        $isValid = \AltchaOrg\Altcha\Altcha::verifySolution($payload, $hmacKey);
+
+        // 清除 Session 中的挑战信息和 hmacKey
+        unset($_SESSION['altcha_challenge']);
+        unset($_SESSION['altcha_signature']);
+        unset($_SESSION['altcha_salt']);
+        unset($_SESSION['altcha_hmac_key']);
+
+        return $isValid;
+    }
+
+
+    /**
      * 验证其他Captcha
      * @static
      * @param  XCaptcha_Config $config  配置
