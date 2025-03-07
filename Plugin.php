@@ -5,8 +5,10 @@
  *
  * @package XCaptcha
  * @author CairBin
- * @version 1.1.1
+ * @author yumusb
+ * @version 1.2.0
  * @link https://cairbin.top
+ * @link https://github.com/yumusb
  */
 
 include "lib/class.geetestlib.php";
