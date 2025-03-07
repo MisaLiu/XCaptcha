@@ -11,6 +11,7 @@
 * [Cloudflare Turnstile](https://www.cloudflare.com)
 * [Google reCaptcha v2](https://developers.google.cn/recaptcha/docs/display?hl=zh-cn)
 * [极验证Geetest v3](https://www2.geetest.com)
+* [alcha-org](https://altcha.org/docs/get-started/)
 
 
 ## 使用方式
