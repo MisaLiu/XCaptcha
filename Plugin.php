@@ -5,10 +5,9 @@
  *
  * @package XCaptcha
  * @author CairBin
- * @author yumusb
- * @version 1.2.0
+ * @version 1.2.1
  * @link https://cairbin.top
- * @link https://github.com/yumusb
+ * contributor: yumusb(https://github.com/yumusb)
  */
 
 include "lib/class.geetestlib.php";
@@ -79,10 +78,10 @@ class XCaptcha_Plugin implements Typecho_Plugin_Interface
         XCaptcha_Config::config($form);
     }
 
-    // public static function personalConfig(Typecho_Widget_Helper_Form $form)
-    // {
-    //     XCaptcha_Config::personalConfig($form);
-    // }
+    /**
+     * personal config
+     */
+    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
 
     /**
      * 验证登陆验证码

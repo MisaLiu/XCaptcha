@@ -35,13 +35,6 @@ class XCaptcha_Config{
         $form->addInput(new Typecho_Widget_Helper_Form_Element_Select('dismod', array('float' => '浮动式（float）', 'embed' => '嵌入式（embed）', 'popup' => '弹出框（popup）'), 'float', _t('极验证展现形式：')));
     }
 
-    // /**
-    //  * 个人配置
-    //  * @static
-    //  * @param Typecho_Widget_Helper_Form $form 配置对象
-    //  */
-    // public static function personalConfig(Typecho_Widget_Helper_Form $form) {}
-
     /**
      * 获取启用的页面
      * @return Array<string> 包含启用页面名称的数组
