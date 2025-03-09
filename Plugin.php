@@ -79,10 +79,10 @@ class XCaptcha_Plugin implements Typecho_Plugin_Interface
         XCaptcha_Config::config($form);
     }
 
-    public static function personalConfig(Typecho_Widget_Helper_Form $form)
-    {
-        XCaptcha_Config::personalConfig($form);
-    }
+    // public static function personalConfig(Typecho_Widget_Helper_Form $form)
+    // {
+    //     XCaptcha_Config::personalConfig($form);
+    // }
 
     /**
      * 验证登陆验证码
