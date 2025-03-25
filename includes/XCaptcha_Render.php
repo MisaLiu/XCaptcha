@@ -14,17 +14,66 @@ class XCaptcha_Render
      */    
     private static function echoContent($cdnUrl, $captchaScript, $page, $captchaChoosen)
     {
+        echo <<<EOF
+        <style rel="stylesheet">
+        .precheck-label { line-height: 44px;text-align:center;background-color: #e8e8e8; color: #4d4d4d; }
+        </style>
+        <script>
+            window.beforeCheckCallback = () => {
+                console.log("XCaptcha loading...");
+                const checkLabel = document.getElementsByClassName('check-label');
+                if (checkLabel.length > 0) {
+                    precheckLabel = document.getElementsByClassName('precheck-label');
+                    for(var i=0; i<precheckLabel.length; i++){
+                        precheckLabel[i].style.display = 'none';
+                    }
+                }
+            }
+            
+
+            window.addEventListener('load', ()=>{
+                const buttons = document.querySelectorAll('.custom-submit-button');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                });
+            });
+        </script>
+EOF;
+
         if($page == 'login'){
             echo <<<EOF
 		    <script>
-			    var jqForm = $("form");
-			    var jqFormSubmit = jqForm.find(":submit");
-			    jqFormSubmit.parent().before(`$captchaScript`);
+			    window.checkCallback = () => {
+                    var jqForm = $("form");
+                    var jqFormSubmit = jqForm.find(":submit");
+                    jqFormSubmit.prop('disabled', false);
+                };
+                $(document).ready(function () {
+                    var jqForm = $("form");
+                    var jqFormSubmit = jqForm.find(":submit");
+                    jqFormSubmit.prop('disabled', true);
+                    jqFormSubmit.parent().before(`$captchaScript`);
+                    jqFormSubmit.parent().before(`<div class="precheck-label"><p class="waiting">行为验证™ 安全组件加载中...</p></div>`);
+                    
+                });
 		    </script>
         
 EOF;
         }else if($page == 'comments'){
+            echo <<<EOF
+            <script>
+            window.checkCallback = ()=>{
+                console.log("XCaptcha: Success to verify passcode.")
+                var btns = document.getElementsByClassName('custom-submit-button');
+                for(var i=0; i<btns.length; i++){
+                    btns[i].disabled = false;
+                }
+            }
+            </script>
+EOF;
             echo $captchaScript;
+            echo '<div class="precheck-label">行为验证™ 安全组件加载中...</div>';
+
         }   
         if($captchaChoosen == 'altcha'){
             echo<<<EOF
@@ -70,6 +119,8 @@ EOF;
                     }, function (captchaObj) {
                         var jqGtCaptcha = document.getElementById('gt-captcha');
                         captchaObj.appendTo(jqGtCaptcha);
+                        captchaObj.onSuccess(window.checkCallback);
+                        window.beforeCheckCallback && window.beforeCheckCallback();
                     });
                 })
                .catch(function (error) {
@@ -87,6 +138,7 @@ EOF;
     private static function echoAltchaContent(){
         echo<<<EOF
         <script>
+            window.beforeCheckCallback && window.beforeCheckCallback();
             if (window.isSecureContext && window.crypto) {
                 console.log("Web Crypto API is available and secure context is present.");
             } else {
@@ -96,6 +148,7 @@ EOF;
                 //console.log('state:', ev.detail.state);
                 if (ev.detail.state === 'verified') {
                     //console.log('payload:', ev.detail.payload);
+                    window.checkCallback && window.checkCallback();
                 }
             });
             </script>

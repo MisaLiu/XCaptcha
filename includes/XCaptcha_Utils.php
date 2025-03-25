@@ -13,9 +13,9 @@ class XCaptcha_Utils
     ];
 
     private static $cdnUrls = [
-        "hcaptcha" => "https://hcaptcha.com/1/api.js",
-        "cloudflare" => "https://challenges.cloudflare.com/turnstile/v0/api.js",
-        "recaptcha" => "https://recaptcha.net/recaptcha/api.js",
+        "hcaptcha" => "https://hcaptcha.com/1/api.js?onload=beforeCheckCallback",
+        "cloudflare" => "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=beforeCheckCallback",
+        "recaptcha" => "https://recaptcha.net/recaptcha/api.js?onload=beforeCheckCallback",
         "geetest" => "https://static.geetest.com/static/js/gt.0.4.9.js",
         "altcha" => "/usr/plugins/XCaptcha/static/altcha.min.js"
     ];
@@ -65,12 +65,13 @@ class XCaptcha_Utils
 			if($widgetSize == 'flexible') 	$widgetSize = 'normal';
 		}
         if($cdnUrl == '') $cdnUrl = self::$cdnUrls[$captchaType];
+        
         $scriptTemplates = [
-            "hcaptcha" => "<div class='h-captcha' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
-            "cloudflare" => "<div class='cf-turnstile' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
-            "recaptcha" => "<div class='g-recaptcha' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}'></div>",
-            "geetest" => "<div id='gt-captcha'></div>",
-            "altcha" => '<altcha-widget id="altcha" challengeurl="/index.php/action/xcaptcha?do=ajaxResponseCaptchaData&type=altcha" hidefooter hidelogo strings=\'{"error": "验证失败，请稍后重试","expired": "验证码已过期","label": "请勾选进行验证","verified": "验证成功","verifying": "正在验证...","waitAlert": "请稍候，正在验证"}\'></altcha-widget>'];
+            "hcaptcha" => "<div class='h-captcha check-label' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}' data-callback='checkCallback'></div>",
+            "cloudflare" => "<div class='cf-turnstile check-label' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}' data-callback='checkCallback'></div>",
+            "recaptcha" => "<div class='g-recaptcha check-label' data-sitekey='{$captchaId}' data-theme='{$widgetColor}' data-size='{$widgetSize}' data-callback='checkCallback'></div>",
+            "geetest" => "<div id='gt-captcha' class='check-label'></div>",
+            "altcha" => '<altcha-widget id="altcha" class="check-label" challengeurl="/index.php/action/xcaptcha?do=ajaxResponseCaptchaData&type=altcha" hidefooter hidelogo strings=\'{"error": "验证失败，请稍后重试","expired": "验证码已过期","label": "请勾选进行验证","verified": "验证成功","verifying": "正在验证...","waitAlert": "请稍候，正在验证"}\'></altcha-widget>'];
 
         return [$scriptTemplates[$captchaType] ?? '', $cdnUrl];
     }

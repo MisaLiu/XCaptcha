@@ -5,7 +5,7 @@
  *
  * @package XCaptcha
  * @author CairBin
- * @version 1.2.1
+ * @version 1.3.0
  * @link https://cairbin.top
  * contributor: yumusb(https://github.com/yumusb)
  */
