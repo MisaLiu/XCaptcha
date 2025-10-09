@@ -2,10 +2,15 @@
 
 /**
  * 极验行为式验证安全平台，php 网站主后台包含的库文件
- *
- * @author Tanxu
+ * 在PHP8中不再被允许创建动态属性，需要显式声明或者给类添加#[\AllowDynamicProperties]
+ * @author Tanxu CairBin
  */
 class GeetestLib {
+    // 为了保证兼容PHP8及其以下版本，这里选择显示声明属性
+    public $captcha_id;
+    public $private_key;
+
+
     const GT_SDK_VERSION = 'php_3.0.0';
 
     public static $connectTimeout = 1;
@@ -30,7 +35,7 @@ class GeetestLib {
                 );
         $data = array_merge($data,$param);
         $query = http_build_query($data);
-        $url = "http://api.geetest.com/register.php?" . $query;
+        $url = "https://api.geetest.com/register.php?" . $query;
         $challenge = $this->send_request($url);
         if (strlen($challenge) != 32) {
             $this->failback_process();
@@ -108,7 +113,7 @@ class GeetestLib {
             "sdk"     => self::GT_SDK_VERSION
         );
         $query = array_merge($query,$param);
-        $url          = "http://api.geetest.com/validate.php";
+        $url          = "https://api.geetest.com/validate.php";
         $codevalidate = $this->post_request($url, $query);
         $obj = json_decode($codevalidate,true);
         if ($obj === false){

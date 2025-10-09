@@ -20,7 +20,7 @@ class XCaptcha_Render
         </style>
         <script>
             window.beforeCheckCallback = () => {
-                console.log("XCaptcha loading...");
+                console.log("XCaptcha: 正在加载验证码样式...");
                 const checkLabel = document.getElementsByClassName('check-label');
                 if (checkLabel.length > 0) {
                     precheckLabel = document.getElementsByClassName('precheck-label');
@@ -28,6 +28,7 @@ class XCaptcha_Render
                         precheckLabel[i].style.display = 'none';
                     }
                 }
+                console.log("XCaptcha: 验证码样式加载完毕!");
             }
             
 
@@ -100,28 +101,40 @@ EOF;
         $ajaxUri = '/index.php/action/xcaptcha?do=ajaxResponseCaptchaData&type=geetest';
         echo <<<EOF
         <script>
+            console.log("XCaptcha: 正在配置Geetest初始化函数...");
             const initializeGeetestCaptcha = ()=>{
                 var ajaxUri = "{$ajaxUri}";
                 var url = ajaxUri + '&t=' + (new Date()).getTime();
                 
                 fetch(url, {method: 'GET'})
                .then(function (response) {
-                    return response.json();
+                    if (!response.ok){
+                        throw new Error(`Http error!`);
+                    }
+                    return response.text();
                 })
-               .then(function (data) {
-                    initGeetest({
-                        gt: data.gt,
-                        challenge: data.challenge,
-                        new_captcha: data.new_captcha,
-                        product: '$dismod',
-                        offline:!data.success,
-                        width: '$geetestSize'
-                    }, function (captchaObj) {
-                        var jqGtCaptcha = document.getElementById('gt-captcha');
-                        captchaObj.appendTo(jqGtCaptcha);
-                        captchaObj.onSuccess(window.checkCallback);
-                        window.beforeCheckCallback && window.beforeCheckCallback();
-                    });
+               .then(function (text) {
+                    try{
+                        const data = JSON.parse(text);
+                        initGeetest({
+                            gt: data.gt,
+                            challenge: data.challenge,
+                            new_captcha: data.new_captcha,
+                            product: '$dismod',
+                            offline:!data.success,
+                            width: '$geetestSize'
+                        }, function (captchaObj) {
+                            console.log("XCaptcha: Geetest请求成功!");
+                            var jqGtCaptcha = document.getElementById('gt-captcha');
+                            captchaObj.appendTo(jqGtCaptcha);
+                            captchaObj.onSuccess(window.checkCallback);
+                            window.beforeCheckCallback && window.beforeCheckCallback();
+                        });
+                    }catch(e){
+                        console.error("XCaptcha: JSON解析错误: ", e);
+                        console.error("XCaptcha: 导致解析错误的文本: ", text);
+                    }
+                    
                 })
                .catch(function (error) {
                     console.log('请求出错：', error);
