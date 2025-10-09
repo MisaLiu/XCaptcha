@@ -3,7 +3,7 @@
 ### Fixed
 
 * 修复了Altcha未正确返回值导致评论异常问题
-* 修复了PHP8.2下不能动态创建类属性前端请求Action接口获取到的是报错信息导致JSON解析出错而致使Geetest无法正常加载问题
+* 修复了PHP8.2不支持动态创建属性而报错(./lib/class.geetestlib.php文件)，前端请求Action接口获取到的是报错信息而非JSON文本，最终导致JSON解析出错Geetest验证码渲染失败的问题。
 
 ## [v1.3.0 pre-release]
 
