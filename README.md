@@ -103,7 +103,7 @@ wget https://github.com/CairBin/XCaptcha/archive/refs/heads/main.zip
 通过移除./includes/XCaptcha_Config.php的personalConfig方法，修复Typecho控制台 -> 个人配置 显示XCaptcha配置找不到的bug(issue #1 )
 
 
-## 关于v1.3.0及后续版本
+### 关于v1.3.0及后续版本
 
 * v1.3.0版本添加了渲染组件成功以及校验成功的回调函数，用于**禁用/启用按钮**以及提示**验证码组件正在加载**，因此对于`hcaptcha`、`cloudflare`以及`recaptcha`在配置`cdnUrl`的时候需要设置`onload`参数为`beforeCheckCallback`，例如`https://hcaptcha.com/1/api.js?onload=beforeCheckCallback`（更具体的参数配置并不属于本文范畴，你应当参考所使用验证码的官方文档）
 
